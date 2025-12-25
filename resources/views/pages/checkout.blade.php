@@ -209,7 +209,7 @@
             </select>
         </form>
     </div>
-
+    <h2>test</h2>
     <form action="{{ route('checkout.process') }}" method="POST">
         @csrf
 

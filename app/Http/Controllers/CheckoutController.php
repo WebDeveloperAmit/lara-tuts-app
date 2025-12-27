@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
@@ -24,6 +25,14 @@ class CheckoutController extends Controller
     public function failure()
     {
         return view('pages.payment-failure');
+    }
+
+    public function logout() 
+    {
+        if (Auth::check()) {
+            Auth::logout();
+            return redirect()->route('login');
+        }
     }
     
 }

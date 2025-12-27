@@ -13,10 +13,10 @@ Route::group([
     'as' => 'checkout.', 
     'middleware' => ['auth.check']
 ], function () {
-    Route::get('/', [CheckoutController::class, 'index'])->name('index');
-    Route::post('process', [CheckoutController::class, 'process'])->name('process');
-    Route::get('success', [CheckoutController::class, 'success'])->name('success');
-    Route::get('failure', [CheckoutController::class, 'failure'])->name('failure');
+    Route::get('/{locale?}', [CheckoutController::class, 'index'])->name('index');
+    Route::post('process/{locale?}', [CheckoutController::class, 'process'])->name('process');
+    Route::get('success/{locale?}', [CheckoutController::class, 'success'])->name('success');
+    Route::get('failure/{locale?}', [CheckoutController::class, 'failure'])->name('failure');
 });
 
 // Authentication Routes
@@ -33,3 +33,6 @@ Route::controller(GoogleController::class)->group(function () {
     Route::get('auth/google', 'redirectToGoogle')->name('auth.google');
     Route::get('auth/google/callback', 'handleGoogleCallback');
 });
+
+// Logout Route
+Route::get('/logout', [CheckoutController::class, 'logout'])->name('logout');

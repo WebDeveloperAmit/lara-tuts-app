@@ -9,6 +9,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
+        .logout_div {
+            margin-bottom: 30px;
+        }
+        .logout_btn {
+            background-color: #ef4444;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
         body {
             font-family: 'Poppins', sans-serif;
             background: #f4f6f8;
@@ -199,17 +212,19 @@
 
 <div class="container">
 
+    <div class="logout_div">
+        <a href="{{ route('logout') }}" class="logout_btn">Logout</a>
+    </div>
+
     <!-- Language dropdown placed here -->
     <div class="language-selector">
-        <form method="GET" id="language-form">
-            <select name="lang" onChange="document.getElementById('language-form').submit()">
-                <option value="en" {{ app()->getLocale() == 'en' ? 'selected' : '' }}>English</option>
-                <option value="bn" {{ app()->getLocale() == 'bn' ? 'selected' : '' }}>Bengali</option>
-                <option value="hi" {{ app()->getLocale() == 'hi' ? 'selected' : '' }}>Hindi</option>
-            </select>
-        </form>
+        <select onchange="changeLanguage(this.value)">
+            <option value="en" {{ app()->getLocale() == 'en' ? 'selected' : '' }}>English</option>
+            <option value="bn" {{ app()->getLocale() == 'bn' ? 'selected' : '' }}>Bengali</option>
+            <option value="hi" {{ app()->getLocale() == 'hi' ? 'selected' : '' }}>Hindi</option>
+        </select>
     </div>
-    <h2>test</h2>
+
     <form action="{{ route('checkout.process') }}" method="POST">
         @csrf
 
@@ -356,6 +371,10 @@
             method.querySelector('input').checked = true;
         });
     });
+
+    function changeLanguage(locale) {
+        window.location.href = `/checkout/${locale}`;
+    }
 </script>
 
 </body>

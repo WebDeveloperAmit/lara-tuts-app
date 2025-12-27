@@ -168,44 +168,42 @@
 
     <!-- Language dropdown placed here -->
     <div class="language-selector">
-        <form method="GET" id="language-form">
-            <select name="lang" onChange="document.getElementById('language-form').submit()">
-                <option value="en" {{ app()->getLocale() == 'en' ? 'selected' : '' }}>English</option>
-                <option value="bn" {{ app()->getLocale() == 'bn' ? 'selected' : '' }}>Bengali</option>
-                <option value="hi" {{ app()->getLocale() == 'hi' ? 'selected' : '' }}>Hindi</option>
-            </select>
-        </form>
+        <select onchange="changeLanguage(this.value)">
+            <option value="en" {{ app()->getLocale() == 'en' ? 'selected' : '' }}>English</option>
+            <option value="bn" {{ app()->getLocale() == 'bn' ? 'selected' : '' }}>Bengali</option>
+            <option value="hi" {{ app()->getLocale() == 'hi' ? 'selected' : '' }}>Hindi</option>
+        </select>
     </div>
 
     <div class="auth-card">
 
-        <h1>Welcome Back</h1>
-        <p>Login to continue to checkout</p>
+        <h1>{{ __('messages.welcome_back') }}</h1>
+        <p>{{ __('messages.login_to_continue_to_checkout') }}</p>
 
         <form method="POST" action="">
             @csrf
 
             <div class="form-group">
-                <label>Email Address</label>
+                <label>{{ __('messages.email_address') }}</label>
                 <input type="email" name="email" required>
             </div>
 
             <div class="form-group">
-                <label>Password</label>
+                <label>{{ __('messages.password') }}</label>
                 <input type="password" name="password" required>
             </div>
 
-            <button class="btn btn-primary">Login</button>
+            <button class="btn btn-primary">{{ __('messages.login') }}</button>
         </form>
 
-        <div class="divider">OR</div>
+        <div class="divider">{{ __('messages.or') }}</div>
 
         <a href="" class="social-btn google">
-            🔎 Continue with Google
+            🔎 {{ __('messages.continue_with_google') }}
         </a>
 
         <a href="" class="social-btn facebook">
-            📘 Continue with Facebook
+            📘 {{ __('messages.continue_with_facebook') }}
         </a>
 
         {{-- <a href="{{ route('auth.google') }}" class="social-btn google">
@@ -217,12 +215,19 @@
         </a> --}}
 
         <div class="auth-footer">
-            Don’t have an account?
-            <a href="">Sign Up</a>
+            {{ __('messages.dont_have_account') }}
+            <a href="{{ route('register') }}">{{ __('messages.sign_up') }}</a>
         </div>
 
     </div>
 </div>
+
+<script>
+    function changeLanguage(locale) {
+        // alert(locale);
+        window.location.href = `/login/${locale}`;
+    }
+</script>
 
 </body>
 </html>

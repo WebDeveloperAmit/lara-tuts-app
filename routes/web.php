@@ -19,10 +19,10 @@ Route::group([
 });
 
 // Authentication Routes
-Route::get('/login', function () {
+Route::get('/login/{locale?}', function () {
     return view('pages.auth.login');
 })->name('login');
 
-Route::get('/register', function () {
+Route::get('/register/{locale?}', function () {
     return view('pages.auth.register');
 })->name('register');

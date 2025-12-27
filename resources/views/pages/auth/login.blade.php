@@ -198,18 +198,19 @@
 
         <div class="divider">{{ __('messages.or') }}</div>
 
-        <a href="" class="social-btn google">
-            🔎 {{ __('messages.continue_with_google') }}
+        <a class="social-btn google" href="{{ route('auth.google') }}">
+            <img src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png">
         </a>
+
+        {{-- <a href="" class="social-btn google">
+            🔎 {{ __('messages.continue_with_google') }}
+        </a> --}}
 
         <a href="" class="social-btn facebook">
             📘 {{ __('messages.continue_with_facebook') }}
         </a>
 
-        {{-- <a href="{{ route('auth.google') }}" class="social-btn google">
-            🔎 Continue with Google
-        </a>
-
+        {{-- 
         <a href="{{ route('auth.facebook') }}" class="social-btn facebook">
             📘 Continue with Facebook
         </a> --}}

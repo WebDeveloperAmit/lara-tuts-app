@@ -165,57 +165,62 @@
 
     <!-- Language dropdown placed here -->
     <div class="language-selector">
-        <form method="GET" id="language-form">
-            <select name="lang" onChange="document.getElementById('language-form').submit()">
-                <option value="en" {{ app()->getLocale() == 'en' ? 'selected' : '' }}>English</option>
-                <option value="bn" {{ app()->getLocale() == 'bn' ? 'selected' : '' }}>Bengali</option>
-                <option value="hi" {{ app()->getLocale() == 'hi' ? 'selected' : '' }}>Hindi</option>
-            </select>
-        </form>
+        <select onchange="changeLanguage(this.value)">
+            <option value="en" {{ app()->getLocale() == 'en' ? 'selected' : '' }}>English</option>
+            <option value="bn" {{ app()->getLocale() == 'bn' ? 'selected' : '' }}>Bengali</option>
+            <option value="hi" {{ app()->getLocale() == 'hi' ? 'selected' : '' }}>Hindi</option>
+        </select>
     </div>
 
     <div class="failure-card">
 
         <div class="failure-icon">✕</div>
 
-        <h1>Payment Failed</h1>
-        <p>We couldn’t process your payment. No money has been deducted.</p>
+        <h1>{{ __('messages.payment_failed') }}</h1>
+        <p>{{ __('messages.payment_failed_message') }}</p>
 
         <!-- Error Details -->
         <div class="error-details">
             <div class="detail-row">
-                <strong>Order ID</strong>
+                <strong>{{ __('messages.order_id') }}</strong>
                 <span>ORD-123456</span>
             </div>
 
             <div class="detail-row">
-                <strong>Payment Method</strong>
+                <strong>{{ __('messages.payment_method') }}</strong>
                 <span>Stripe</span>
             </div>
 
             <div class="detail-row">
-                <strong>Reason</strong>
-                <span>Transaction was declined by the payment gateway.</span>
+                <strong>{{ __('messages.reason') }}</strong>
+                <span>{{ __('messages.transaction_declined') }}</span>
             </div>
         </div>
 
         <p class="help-note">
-            Please try again using a different payment method or check with your bank.
+            {{ __('messages.retry_payment_message') }}
         </p>
 
         <!-- Actions -->
         <div class="actions">
             <a href="{{ route('checkout.index') }}" class="btn btn-primary">
-                Retry Payment
+                {{ __('messages.retry_payment') }}
             </a>
         </div>
 
         <p class="support-note">
-            Need help? Contact our support team and share your Order ID.
+            {{ __('messages.support_note') }}
         </p>
 
     </div>
 </div>
+
+<script>
+    function changeLanguage(locale) 
+    {
+        window.location.href = `/checkout/failure/${locale}`;
+    }
+</script>
 
 </body>
 </html>

@@ -11,6 +11,7 @@ Route::get('/', function () {
 Route::group([
     'prefix' => 'checkout', 
     'as' => 'checkout.', 
+    'where' => ['locale' => 'en|bn|hi'],
     'middleware' => ['auth.check']
 ], function () {
     Route::get('/{locale?}', [CheckoutController::class, 'index'])->name('index');

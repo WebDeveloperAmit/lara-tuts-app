@@ -165,13 +165,12 @@
 
     <!-- Language dropdown placed here -->
     <div class="language-selector">
-        <form method="GET" id="language-form">
-            <select name="lang" onChange="document.getElementById('language-form').submit()">
-                <option value="en" {{ app()->getLocale() == 'en' ? 'selected' : '' }}>English</option>
-                <option value="bn" {{ app()->getLocale() == 'bn' ? 'selected' : '' }}>Bengali</option>
-                <option value="hi" {{ app()->getLocale() == 'hi' ? 'selected' : '' }}>Hindi</option>
-            </select>
-        </form>
+        {{-- <select name="lang" onChange="document.getElementById('language-form').submit()"> --}}
+        <select onchange="changeLanguage(this.value)">
+            <option value="en" {{ app()->getLocale() == 'en' ? 'selected' : '' }}>English</option>
+            <option value="bn" {{ app()->getLocale() == 'bn' ? 'selected' : '' }}>Bengali</option>
+            <option value="hi" {{ app()->getLocale() == 'hi' ? 'selected' : '' }}>Hindi</option>
+        </select>
     </div>
     
     <div class="success-card">
@@ -218,5 +217,11 @@
     </div>
 </div>
 
+<script>
+    function changeLanguage(locale) 
+    {
+        window.location.href = `/checkout/success/${locale}`;
+    }
+</script>
 </body>
 </html>

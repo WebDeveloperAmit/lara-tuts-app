@@ -213,7 +213,7 @@
 <div class="container">
 
     <div class="logout_div">
-        <a href="{{ route('logout') }}" class="logout_btn">Logout</a>
+        <a href="{{ route('logout') }}" class="logout_btn">{{ __('messages.logout') }}</a>
     </div>
 
     <!-- Language dropdown placed here -->
@@ -232,42 +232,41 @@
 
             <!-- LEFT -->
             <div class="card">
-                <h2>Billing Details</h2>
+                <h2>{{ __('messages.billing_details') }}</h2>
 
                 <div class="row">
                     <div class="form-group">
-                        <label>First Name</label>
+                        <label>{{ __('messages.first_name') }}</label>
                         <input type="text" name="first_name" placeholder="John" required>
                     </div>
                     <div class="form-group">
-                        <label>Last Name</label>
+                        <label>{{ __('messages.last_name') }}</label>
                         <input type="text" name="last_name" placeholder="Doe" required>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Email Address</label>
+                    <label>{{ __('messages.email_address') }}</label>
                     <input type="email" name="email" placeholder="you@example.com" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Phone Number</label>
+                    <label>{{ __('messages.phone_number') }}</label>
                     <input type="text" name="phone" placeholder="+1 234 567 890" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Address</label>
+                    <label>{{ __('messages.address') }}</label>
                     <textarea name="address" rows="3" placeholder="Street, City, Country" required></textarea>
                 </div>
 
-                <h2>Payment Method</h2>
-
+                <h2>{{ __('messages.payment_method') }}</h2>
                 <label class="payment-method">
                     <div class="payment-left">
                         <span class="payment-icon">💳</span>
                         <div>
-                            <strong>Stripe</strong>
-                            <small>Credit / Debit Card</small>
+                            <strong>{{ __('messages.stripe') }}</strong>
+                            <small>{{ __('messages.credit_debit_card') }}</small>
                         </div>
                     </div>
                     <input type="radio" name="payment_method" value="stripe" required>
@@ -277,8 +276,8 @@
                     <div class="payment-left">
                         <span class="payment-icon">🅿️</span>
                         <div>
-                            <strong>PayPal</strong>
-                            <small>Pay using PayPal</small>
+                            <strong>{{ __('messages.paypal') }}</strong>
+                            <small>{{ __('messages.pay_using_payPal') }}</small>
                         </div>
                     </div>
                     <input type="radio" name="payment_method" value="paypal">
@@ -288,8 +287,8 @@
                     <div class="payment-left">
                         <span class="payment-icon">⚡</span>
                         <div>
-                            <strong>RazorPay</strong>
-                            <small>UPI / Cards</small>
+                            <strong>{{ __('messages.razorpay') }}</strong>
+                            <small>{{ __('messages.upi_cards_netBanking') }}</small>
                         </div>
                     </div>
                     <input type="radio" name="payment_method" value="razorpay">
@@ -299,8 +298,8 @@
                     <div class="payment-left">
                         <span class="payment-icon">📦</span>
                         <div>
-                            <strong>Cash on Delivery</strong>
-                            <small>Pay on delivery</small>
+                            <strong>{{ __('messages.pay_on_delivery') }}</strong>
+                            <small>{{ __('messages.pay_on_delivery') }}</small>
                         </div>
                     </div>
                     <input type="radio" name="payment_method" value="cod">
@@ -309,19 +308,19 @@
 
             <!-- RIGHT -->
             <div class="card">
-                <h2>Order Summary</h2>
-                <p class="secure-note">🔒 Secure & Encrypted Checkout</p>
+                <h2>{{ __('messages.order_summary') }}</h2>
+                <p class="secure-note">🔒 {{ __('messages.secure_encrypted_checkout') }}</p>
 
                 <div class="summary-item">
                     <div>
-                        <strong>Product Name</strong>
-                        <small>Quantity: 1</small>
+                        <strong>{{ __('messages.product_name') }}</strong>
+                        <small>{{ __('messages.quantity') }}: 1</small>
                     </div>
                     <span>$50.00</span>
                 </div>
 
                 <div class="summary-item">
-                    <span>Shipping</span>
+                    <span>{{ __('messages.shipping') }}</span>
                     <span>$5.00</span>
                 </div>
 
@@ -335,7 +334,7 @@
                 </button> --}}
 
                 <div class="form-group">
-                    <label>Total Amount</label>
+                    <label>{{ __('messages.total_amount') }}</label>
                     <input
                         type="text"
                         name="total_amount"
@@ -352,7 +351,7 @@
                 </div>
 
                 <button type="submit" class="checkout-btn">
-                    Place Order
+                    {{ __('messages.place_order') }}
                 </button>
 
             </div>

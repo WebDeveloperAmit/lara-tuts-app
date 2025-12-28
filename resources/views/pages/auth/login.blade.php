@@ -202,16 +202,17 @@
             <img src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png">
         </a>
 
-        {{-- <a href="" class="social-btn google">
-            🔎 {{ __('messages.continue_with_google') }}
-        </a> --}}
-
-        <a href="" class="social-btn facebook">
-            📘 {{ __('messages.continue_with_facebook') }}
+        <a class="social-btn facebook" href="{{ route('auth.facebook') }}">
+            <img src="https://www.facebook.com/images/fb_icon_325x325.png"
+                style="height:40px; border-radius:4px;">
         </a>
 
-        {{-- 
-        <a href="{{ route('auth.facebook') }}" class="social-btn facebook">
+
+        {{-- <a href="" class="social-btn facebook">
+            📘 {{ __('messages.continue_with_facebook') }}
+        </a> --}}
+
+        {{-- <a href="{{ route('auth.facebook') }}" class="social-btn facebook">
             📘 Continue with Facebook
         </a> --}}
 

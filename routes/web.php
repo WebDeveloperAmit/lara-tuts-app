@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\FacebookController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -35,5 +36,10 @@ Route::controller(GoogleController::class)->group(function () {
     Route::get('auth/google/callback', 'handleGoogleCallback');
 });
 
+
+Route::controller(FacebookController::class)->group(function(){
+    Route::get('auth/facebook', 'redirectToFacebook')->name('auth.facebook');
+    Route::get('auth/facebook/callback', 'handleFacebookCallback');
+});
 // Logout Route
 Route::get('/logout', [CheckoutController::class, 'logout'])->name('logout');

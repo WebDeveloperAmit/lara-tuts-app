@@ -48,4 +48,10 @@ return [
     'retry_payment_message' => 'Please try again using a different payment method or check with your bank.',
     'reason' => 'Reason',
     'transaction_declined' => 'Transaction was declined by the payment gateway.',
+    'payment_successful' => 'Payment Successful',
+    'payment_successful_message' => 'Thank you for your purchase! Your payment has been processed successfully.',
+    'email' => 'Email',
+    'total_paid' => 'Total Paid',
+    'continue_shopping' => 'Continue Shopping',
+    'transaction_confirmed' => 'This transaction was processed securely. A confirmation email has been sent to you.',
 ];

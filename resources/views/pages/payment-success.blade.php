@@ -177,28 +177,28 @@
 
         <div class="success-icon">✓</div>
 
-        <h1>Payment Successful</h1>
-        <p>Thank you for your purchase! Your payment has been processed successfully.</p>
+        <h1>{{ __('messages.payment_successful') }}</h1>
+        <p>{{ __('messages.payment_successful_message') }}</p>
 
         <!-- Order Details -->
         <div class="order-details">
             <div class="detail-row">
-                <strong>Order ID</strong>
+                <strong>{{ __('messages.order_id') }}</strong>
                 <span>ORD-123456</span>
             </div>
 
             <div class="detail-row">
-                <strong>Payment Method</strong>
+                <strong>{{ __('messages.payment_method') }}</strong>
                 <span>{{ ucfirst($order->payment_method ?? 'Stripe') }}</span>
             </div>
 
             <div class="detail-row">
-                <strong>Email</strong>
+                <strong>{{ __('messages.email') }}</strong>
                 <span>customer@example.com</span>
             </div>
 
             <div class="detail-row total">
-                <strong>Total Paid</strong>
+                <strong>{{ __('messages.total_paid') }}</strong>
                 <span>$55.20</span>
             </div>
         </div>
@@ -206,12 +206,12 @@
         <!-- Actions -->
         <div class="actions">
             <a href="{{ route('checkout.index') }}" class="btn btn-outline">
-                Continue Shopping
+                {{ __('messages.continue_shopping') }}
             </a>
         </div>
 
         <p class="secure-note">
-            🔒 This transaction was processed securely. A confirmation email has been sent to you.
+            🔒 {{ __('messages.transaction_confirmed') }}
         </p>
 
     </div>

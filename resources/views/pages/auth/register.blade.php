@@ -180,49 +180,74 @@
         <h1>{{ __('messages.create_account') }}</h1>
         <p>{{ __('messages.login_to_continue_to_checkout') }}</p>
 
-        <form method="POST" action="">
+        <form method="POST" action="{{ route('register.process') }}">
             @csrf
 
             <div class="form-group">
                 <label>{{ __('messages.full_name') }}</label>
-                <input type="text" name="name" required>
+                <input 
+                type="text" 
+                name="name" 
+                value="{{ old('name') }}"
+                class="@error('name') is-invalid @enderror"
+                >
+                @error('name')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="form-group">
                 <label>{{ __('messages.email_address') }}</label>
-                <input type="email" name="email" required>
+                <input 
+                type="email" 
+                name="email"
+                value="{{ old('email') }}"
+                class="@error('email') is-invalid @enderror"
+                >
+                @error('email')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="form-group">
                 <label>{{ __('messages.password') }}</label>
-                <input type="password" name="password" required>
+                <input 
+                type="password" 
+                name="password"
+                class="@error('password') is-invalid @enderror"
+                >
+                @error('password')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="form-group">
                 <label>{{ __('messages.confirm_password') }}</label>
-                <input type="password" name="password_confirmation" required>
+                <input 
+                type="password" 
+                name="password_confirmation"
+                class="@error('password_confirmation') is-invalid @enderror"
+                >
+                @error('password_confirmation')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             </div>
 
-            <button class="btn btn-primary">{{ __('messages.create_account') }}</button>
+            <button type="submit" class="btn btn-primary">{{ __('messages.create_account') }}</button>
+
         </form>
 
         <div class="divider">{{ __('messages.or') }}</div>
 
-        <a href="" class="social-btn google">
-            🔎 {{ __('messages.continue_with_google') }}
+        <a class="social-btn google" href="{{ route('auth.google') }}">
+            <img src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png">
         </a>
 
-        <a href="" class="social-btn facebook">
-            📘 {{ __('messages.continue_with_facebook') }}
+        <a class="social-btn facebook" href="{{ route('auth.facebook') }}">
+            <img src="https://www.facebook.com/images/fb_icon_325x325.png"
+                style="height:40px; border-radius:4px;">
         </a>
 
-        {{-- <a href="{{ route('auth.google') }}" class="social-btn google">
-            🔎 Sign up with Google
-        </a>
-
-        <a href="{{ route('auth.facebook') }}" class="social-btn facebook">
-            📘 Sign up with Facebook
-        </a> --}}
 
         <div class="auth-footer">
             {{ __('messages.already_have_an_account?') }}

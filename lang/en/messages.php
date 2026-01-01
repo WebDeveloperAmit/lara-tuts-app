@@ -54,4 +54,9 @@ return [
     'total_paid' => 'Total Paid',
     'continue_shopping' => 'Continue Shopping',
     'transaction_confirmed' => 'This transaction was processed securely. A confirmation email has been sent to you.',
+    'login_error' => 'Invalid credentials provided.',
+    'email_not_found' => 'The provided email does not exist.',
+    'password_incorrect' => 'The provided password is incorrect.',
+    'registration_successful' => 'Registration successful. You are now logged in.',
+    'logged_in_successfully' => 'Logged in successfully.',
 ];

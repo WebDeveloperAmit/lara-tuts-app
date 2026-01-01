@@ -180,17 +180,32 @@
         <h1>{{ __('messages.welcome_back') }}</h1>
         <p>{{ __('messages.login_to_continue_to_checkout') }}</p>
 
-        <form method="POST" action="">
+        <form method="POST" action="{{ route('login.process') }}">
             @csrf
 
             <div class="form-group">
                 <label>{{ __('messages.email_address') }}</label>
-                <input type="email" name="email" required>
+                <input 
+                type="email" 
+                name="email"
+                value="{{ old('email') }}"
+                class="@error('email') is-invalid @enderror"
+                >
+                @error('email')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="form-group">
                 <label>{{ __('messages.password') }}</label>
-                <input type="password" name="password" required>
+                <input 
+                type="password" 
+                name="password"
+                class="@error('password') is-invalid @enderror"
+                >
+                @error('password')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             </div>
 
             <button class="btn btn-primary">{{ __('messages.login') }}</button>

@@ -36,10 +36,18 @@ Route::controller(GoogleController::class)->group(function () {
     Route::get('auth/google/callback', 'handleGoogleCallback');
 });
 
-
 Route::controller(FacebookController::class)->group(function(){
     Route::get('auth/facebook', 'redirectToFacebook')->name('auth.facebook');
     Route::get('auth/facebook/callback', 'handleFacebookCallback');
 });
+
+Route::post('/login/process', [CheckoutController::class, 'loggedInProcess'])->name('login.process');
+Route::post('/register/process', [CheckoutController::class, 'registerProcess'])->name('register.process');
+
 // Logout Route
 Route::get('/logout', [CheckoutController::class, 'logout'])->name('logout');
+
+// Fallback Route for undefined routes
+Route::fallback(function () {
+    return redirect()->route('login');
+});

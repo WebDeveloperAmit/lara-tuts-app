@@ -48,7 +48,7 @@ class FacebookController extends Controller
             ]);
 
             Auth::login($user);
-            return redirect()->intended('home');
+            return redirect()->intended('checkout');
 
         } catch (\Exception $e) {
             Log::error('Facebook login error: ' . $e->getMessage());

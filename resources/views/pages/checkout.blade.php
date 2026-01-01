@@ -1,13 +1,146 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Checkout</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('pages.layout.layout')
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+@section('title', __('Checkout'))
 
+@section('content')
+
+    <form action="{{ route('checkout.process') }}" method="POST">
+        @csrf
+
+        <div class="checkout-wrapper">
+
+            <!-- LEFT -->
+            <div class="card">
+                <h2>{{ __('messages.billing_details') }}</h2>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>{{ __('messages.first_name') }}</label>
+                        <input type="text" name="first_name" placeholder="John" required>
+                    </div>
+                    <div class="form-group">
+                        <label>{{ __('messages.last_name') }}</label>
+                        <input type="text" name="last_name" placeholder="Doe" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>{{ __('messages.email_address') }}</label>
+                    <input type="email" name="email" placeholder="you@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label>{{ __('messages.phone_number') }}</label>
+                    <input type="text" name="phone" placeholder="+1 234 567 890" required>
+                </div>
+
+                <div class="form-group">
+                    <label>{{ __('messages.address') }}</label>
+                    <textarea name="address" rows="3" placeholder="Street, City, Country" required></textarea>
+                </div>
+
+                <h2>{{ __('messages.payment_method') }}</h2>
+                <label class="payment-method">
+                    <div class="payment-left">
+                        <span class="payment-icon">💳</span>
+                        <div>
+                            <strong>{{ __('messages.stripe') }}</strong>
+                            <small>{{ __('messages.credit_debit_card') }}</small>
+                        </div>
+                    </div>
+                    <input type="radio" name="payment_method" value="stripe" required>
+                </label>
+
+                <label class="payment-method">
+                    <div class="payment-left">
+                        <span class="payment-icon">🅿️</span>
+                        <div>
+                            <strong>{{ __('messages.paypal') }}</strong>
+                            <small>{{ __('messages.pay_using_payPal') }}</small>
+                        </div>
+                    </div>
+                    <input type="radio" name="payment_method" value="paypal">
+                </label>
+
+                <label class="payment-method">
+                    <div class="payment-left">
+                        <span class="payment-icon">⚡</span>
+                        <div>
+                            <strong>{{ __('messages.razorpay') }}</strong>
+                            <small>{{ __('messages.upi_cards_netBanking') }}</small>
+                        </div>
+                    </div>
+                    <input type="radio" name="payment_method" value="razorpay">
+                </label>
+
+                <label class="payment-method">
+                    <div class="payment-left">
+                        <span class="payment-icon">📦</span>
+                        <div>
+                            <strong>{{ __('messages.pay_on_delivery') }}</strong>
+                            <small>{{ __('messages.pay_on_delivery') }}</small>
+                        </div>
+                    </div>
+                    <input type="radio" name="payment_method" value="cod">
+                </label>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="card">
+                <h2>{{ __('messages.order_summary') }}</h2>
+                <p class="secure-note">🔒 {{ __('messages.secure_encrypted_checkout') }}</p>
+
+                <div class="summary-item">
+                    <div>
+                        <strong>{{ __('messages.product_name') }}</strong>
+                        <small>{{ __('messages.quantity') }}: 1</small>
+                    </div>
+                    <span>$50.00</span>
+                </div>
+
+                <div class="summary-item">
+                    <span>{{ __('messages.shipping') }}</span>
+                    <span>$5.00</span>
+                </div>
+
+                {{-- <div class="summary-item summary-total">
+                    <span>Total</span>
+                    <span>$55.00</span>
+                </div>
+
+                <button type="submit" class="checkout-btn">
+                    Pay $55.00 Securely
+                </button> --}}
+
+                <div class="form-group">
+                    <label>{{ __('messages.total_amount') }}</label>
+                    <input
+                        type="text"
+                        name="total_amount"
+                        id="totalAmount"
+                        value="55.00"
+                        readonly
+                        style="
+                            font-size:18px;
+                            font-weight:600;
+                            background:#f9fafb;
+                            border:1px solid #e5e7eb;
+                        "
+                    >
+                </div>
+
+                <button type="submit" class="checkout-btn">
+                    {{ __('messages.place_order') }}
+                </button>
+
+            </div>
+
+        </div>
+    </form>
+
+@endsection
+
+@push('css')
     <style>
         .logout_div {
             margin-bottom: 30px;
@@ -207,174 +340,18 @@
         }
 
     </style>
-</head>
-<body>
+@endpush
 
-<div class="container">
+@push('js')
+    <script>
+        document.querySelectorAll('.payment-method').forEach(method => {
+            method.addEventListener('click', () => {
+                document.querySelectorAll('.payment-method')
+                    .forEach(pm => pm.classList.remove('active'));
 
-    <div class="logout_div">
-        <a href="{{ route('logout') }}" class="logout_btn">{{ __('messages.logout') }}</a>
-    </div>
-
-    <!-- Language dropdown placed here -->
-    <div class="language-selector">
-        <select onchange="changeLanguage(this.value)">
-            <option value="en" {{ app()->getLocale() == 'en' ? 'selected' : '' }}>English</option>
-            <option value="bn" {{ app()->getLocale() == 'bn' ? 'selected' : '' }}>Bengali</option>
-            <option value="hi" {{ app()->getLocale() == 'hi' ? 'selected' : '' }}>Hindi</option>
-        </select>
-    </div>
-
-    <form action="{{ route('checkout.process') }}" method="POST">
-        @csrf
-
-        <div class="checkout-wrapper">
-
-            <!-- LEFT -->
-            <div class="card">
-                <h2>{{ __('messages.billing_details') }}</h2>
-
-                <div class="row">
-                    <div class="form-group">
-                        <label>{{ __('messages.first_name') }}</label>
-                        <input type="text" name="first_name" placeholder="John" required>
-                    </div>
-                    <div class="form-group">
-                        <label>{{ __('messages.last_name') }}</label>
-                        <input type="text" name="last_name" placeholder="Doe" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>{{ __('messages.email_address') }}</label>
-                    <input type="email" name="email" placeholder="you@example.com" required>
-                </div>
-
-                <div class="form-group">
-                    <label>{{ __('messages.phone_number') }}</label>
-                    <input type="text" name="phone" placeholder="+1 234 567 890" required>
-                </div>
-
-                <div class="form-group">
-                    <label>{{ __('messages.address') }}</label>
-                    <textarea name="address" rows="3" placeholder="Street, City, Country" required></textarea>
-                </div>
-
-                <h2>{{ __('messages.payment_method') }}</h2>
-                <label class="payment-method">
-                    <div class="payment-left">
-                        <span class="payment-icon">💳</span>
-                        <div>
-                            <strong>{{ __('messages.stripe') }}</strong>
-                            <small>{{ __('messages.credit_debit_card') }}</small>
-                        </div>
-                    </div>
-                    <input type="radio" name="payment_method" value="stripe" required>
-                </label>
-
-                <label class="payment-method">
-                    <div class="payment-left">
-                        <span class="payment-icon">🅿️</span>
-                        <div>
-                            <strong>{{ __('messages.paypal') }}</strong>
-                            <small>{{ __('messages.pay_using_payPal') }}</small>
-                        </div>
-                    </div>
-                    <input type="radio" name="payment_method" value="paypal">
-                </label>
-
-                <label class="payment-method">
-                    <div class="payment-left">
-                        <span class="payment-icon">⚡</span>
-                        <div>
-                            <strong>{{ __('messages.razorpay') }}</strong>
-                            <small>{{ __('messages.upi_cards_netBanking') }}</small>
-                        </div>
-                    </div>
-                    <input type="radio" name="payment_method" value="razorpay">
-                </label>
-
-                <label class="payment-method">
-                    <div class="payment-left">
-                        <span class="payment-icon">📦</span>
-                        <div>
-                            <strong>{{ __('messages.pay_on_delivery') }}</strong>
-                            <small>{{ __('messages.pay_on_delivery') }}</small>
-                        </div>
-                    </div>
-                    <input type="radio" name="payment_method" value="cod">
-                </label>
-            </div>
-
-            <!-- RIGHT -->
-            <div class="card">
-                <h2>{{ __('messages.order_summary') }}</h2>
-                <p class="secure-note">🔒 {{ __('messages.secure_encrypted_checkout') }}</p>
-
-                <div class="summary-item">
-                    <div>
-                        <strong>{{ __('messages.product_name') }}</strong>
-                        <small>{{ __('messages.quantity') }}: 1</small>
-                    </div>
-                    <span>$50.00</span>
-                </div>
-
-                <div class="summary-item">
-                    <span>{{ __('messages.shipping') }}</span>
-                    <span>$5.00</span>
-                </div>
-
-                {{-- <div class="summary-item summary-total">
-                    <span>Total</span>
-                    <span>$55.00</span>
-                </div>
-
-                <button type="submit" class="checkout-btn">
-                    Pay $55.00 Securely
-                </button> --}}
-
-                <div class="form-group">
-                    <label>{{ __('messages.total_amount') }}</label>
-                    <input
-                        type="text"
-                        name="total_amount"
-                        id="totalAmount"
-                        value="55.00"
-                        readonly
-                        style="
-                            font-size:18px;
-                            font-weight:600;
-                            background:#f9fafb;
-                            border:1px solid #e5e7eb;
-                        "
-                    >
-                </div>
-
-                <button type="submit" class="checkout-btn">
-                    {{ __('messages.place_order') }}
-                </button>
-
-            </div>
-
-        </div>
-    </form>
-</div>
-
-<script>
-    document.querySelectorAll('.payment-method').forEach(method => {
-        method.addEventListener('click', () => {
-            document.querySelectorAll('.payment-method')
-                .forEach(pm => pm.classList.remove('active'));
-
-            method.classList.add('active');
-            method.querySelector('input').checked = true;
+                method.classList.add('active');
+                method.querySelector('input').checked = true;
+            });
         });
-    });
-
-    function changeLanguage(locale) {
-        window.location.href = `/checkout/${locale}`;
-    }
-</script>
-
-</body>
-</html>
+    </script>
+@endpush

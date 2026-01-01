@@ -1,13 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Payment Successful</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('pages.layout.layout')
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+@section('title', __('Payment Successful'))
 
+@section('content')
+    <div class="success-card">
+
+        <div class="success-icon">✓</div>
+
+        <h1>{{ __('messages.payment_successful') }}</h1>
+        <p>{{ __('messages.payment_successful_message') }}</p>
+
+        <!-- Order Details -->
+        <div class="order-details">
+            <div class="detail-row">
+                <strong>{{ __('messages.order_id') }}</strong>
+                <span>ORD-123456</span>
+            </div>
+
+            <div class="detail-row">
+                <strong>{{ __('messages.payment_method') }}</strong>
+                <span>{{ ucfirst($order->payment_method ?? 'Stripe') }}</span>
+            </div>
+
+            <div class="detail-row">
+                <strong>{{ __('messages.email') }}</strong>
+                <span>customer@example.com</span>
+            </div>
+
+            <div class="detail-row total">
+                <strong>{{ __('messages.total_paid') }}</strong>
+                <span>$55.20</span>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+            <a href="{{ route('checkout.index') }}" class="btn btn-outline">
+                {{ __('messages.continue_shopping') }}
+            </a>
+        </div>
+
+        <p class="secure-note">
+            🔒 {{ __('messages.transaction_confirmed') }}
+        </p>
+
+    </div>
+@endsection
+
+@push('css')
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -158,70 +198,8 @@
             outline: none;
         }
     </style>
-</head>
-<body>
+@endpush
 
-<div class="container">
+@push('js')
 
-    <!-- Language dropdown placed here -->
-    <div class="language-selector">
-        {{-- <select name="lang" onChange="document.getElementById('language-form').submit()"> --}}
-        <select onchange="changeLanguage(this.value)">
-            <option value="en" {{ app()->getLocale() == 'en' ? 'selected' : '' }}>English</option>
-            <option value="bn" {{ app()->getLocale() == 'bn' ? 'selected' : '' }}>Bengali</option>
-            <option value="hi" {{ app()->getLocale() == 'hi' ? 'selected' : '' }}>Hindi</option>
-        </select>
-    </div>
-    
-    <div class="success-card">
-
-        <div class="success-icon">✓</div>
-
-        <h1>{{ __('messages.payment_successful') }}</h1>
-        <p>{{ __('messages.payment_successful_message') }}</p>
-
-        <!-- Order Details -->
-        <div class="order-details">
-            <div class="detail-row">
-                <strong>{{ __('messages.order_id') }}</strong>
-                <span>ORD-123456</span>
-            </div>
-
-            <div class="detail-row">
-                <strong>{{ __('messages.payment_method') }}</strong>
-                <span>{{ ucfirst($order->payment_method ?? 'Stripe') }}</span>
-            </div>
-
-            <div class="detail-row">
-                <strong>{{ __('messages.email') }}</strong>
-                <span>customer@example.com</span>
-            </div>
-
-            <div class="detail-row total">
-                <strong>{{ __('messages.total_paid') }}</strong>
-                <span>$55.20</span>
-            </div>
-        </div>
-
-        <!-- Actions -->
-        <div class="actions">
-            <a href="{{ route('checkout.index') }}" class="btn btn-outline">
-                {{ __('messages.continue_shopping') }}
-            </a>
-        </div>
-
-        <p class="secure-note">
-            🔒 {{ __('messages.transaction_confirmed') }}
-        </p>
-
-    </div>
-</div>
-
-<script>
-    function changeLanguage(locale) 
-    {
-        window.location.href = `/checkout/success/${locale}`;
-    }
-</script>
-</body>
-</html>
+@endpush

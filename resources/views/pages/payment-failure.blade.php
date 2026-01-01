@@ -1,13 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Payment Failed</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('pages.layout.layout')
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+@section('title', __('Payment Failed'))
 
+@section('content')
+    <div class="failure-card">
+
+        <div class="failure-icon">✕</div>
+
+        <h1>{{ __('messages.payment_failed') }}</h1>
+        <p>{{ __('messages.payment_failed_message') }}</p>
+
+        <!-- Error Details -->
+        <div class="error-details">
+            <div class="detail-row">
+                <strong>{{ __('messages.order_id') }}</strong>
+                <span>ORD-123456</span>
+            </div>
+
+            <div class="detail-row">
+                <strong>{{ __('messages.payment_method') }}</strong>
+                <span>Stripe</span>
+            </div>
+
+            <div class="detail-row">
+                <strong>{{ __('messages.reason') }}</strong>
+                <span>{{ __('messages.transaction_declined') }}</span>
+            </div>
+        </div>
+
+        <p class="help-note">
+            {{ __('messages.retry_payment_message') }}
+        </p>
+
+        <!-- Actions -->
+        <div class="actions">
+            <a href="{{ route('checkout.index') }}" class="btn btn-primary">
+                {{ __('messages.retry_payment') }}
+            </a>
+        </div>
+
+        <p class="support-note">
+            {{ __('messages.support_note') }}
+        </p>
+
+    </div>
+@endsection
+
+@push('css')
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -158,69 +197,8 @@
             outline: none;
         }
     </style>
-</head>
-<body>
+@endpush
 
-<div class="container">
+@push('js')
 
-    <!-- Language dropdown placed here -->
-    <div class="language-selector">
-        <select onchange="changeLanguage(this.value)">
-            <option value="en" {{ app()->getLocale() == 'en' ? 'selected' : '' }}>English</option>
-            <option value="bn" {{ app()->getLocale() == 'bn' ? 'selected' : '' }}>Bengali</option>
-            <option value="hi" {{ app()->getLocale() == 'hi' ? 'selected' : '' }}>Hindi</option>
-        </select>
-    </div>
-
-    <div class="failure-card">
-
-        <div class="failure-icon">✕</div>
-
-        <h1>{{ __('messages.payment_failed') }}</h1>
-        <p>{{ __('messages.payment_failed_message') }}</p>
-
-        <!-- Error Details -->
-        <div class="error-details">
-            <div class="detail-row">
-                <strong>{{ __('messages.order_id') }}</strong>
-                <span>ORD-123456</span>
-            </div>
-
-            <div class="detail-row">
-                <strong>{{ __('messages.payment_method') }}</strong>
-                <span>Stripe</span>
-            </div>
-
-            <div class="detail-row">
-                <strong>{{ __('messages.reason') }}</strong>
-                <span>{{ __('messages.transaction_declined') }}</span>
-            </div>
-        </div>
-
-        <p class="help-note">
-            {{ __('messages.retry_payment_message') }}
-        </p>
-
-        <!-- Actions -->
-        <div class="actions">
-            <a href="{{ route('checkout.index') }}" class="btn btn-primary">
-                {{ __('messages.retry_payment') }}
-            </a>
-        </div>
-
-        <p class="support-note">
-            {{ __('messages.support_note') }}
-        </p>
-
-    </div>
-</div>
-
-<script>
-    function changeLanguage(locale) 
-    {
-        window.location.href = `/checkout/failure/${locale}`;
-    }
-</script>
-
-</body>
-</html>
+@endpush

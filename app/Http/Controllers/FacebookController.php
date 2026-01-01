@@ -7,6 +7,8 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class FacebookController extends Controller
 {
@@ -18,44 +20,40 @@ class FacebookController extends Controller
     public function handleFacebookCallback()
     {
         try {
-        
-            $user = Socialite::driver('facebook')->user();
 
-            echo "<pre>";
-            print_r($user);
-            echo "</pre>";
-            echo "<hr/>";
+            $fbUser = Socialite::driver('facebook')->user();
 
-         
-            $findUser = User::where('facebook_id', $user->id)->first();
+            // Email may be NULL
+            $email = $fbUser->getEmail();
 
-            echo "<pre>";
-            print_r($findUser);
-            echo "</pre>";
-            echo "<hr/>";
+            // Create fallback email if not provided
+            if (!$email) {
+                $email = 'fb_' . $fbUser->getId() . '@facebook.com';
+            }
 
-            die('stop');
-         
-            if($findUser){
-         
-                Auth::login($findUser);
-        
-                return redirect()->intended('home');
-         
-            }else{
-                $newUser = User::updateOrCreate(['email' => $user->email],[
-                        'name' => $user->name,
-                        'facebook_id'=> $user->id,
-                        'password' => encrypt('123456dummy')
-                    ]);
-        
-                Auth::login($newUser);
-        
+            // Find user by facebook_id
+            $user = User::where('facebook_id', $fbUser->getId())->first();
+
+            if ($user) {
+                Auth::login($user);
                 return redirect()->intended('home');
             }
-        
-        } catch (Exception $e) {
-            dd($e->getMessage());
+
+            // Create new user
+            $user = User::create([
+                'name'        => $fbUser->getName() ?? 'Facebook User',
+                'email'       => $email,
+                'facebook_id' => $fbUser->getId(),
+                'password'    => bcrypt(Str::random(16)), // secure
+            ]);
+
+            Auth::login($user);
+            return redirect()->intended('home');
+
+        } catch (\Exception $e) {
+            Log::error('Facebook login error: ' . $e->getMessage());
+            return redirect()->route('login', ['locale' => app()->getLocale()])->with('error', 'Facebook login failed.');
+
         }
     }
 }

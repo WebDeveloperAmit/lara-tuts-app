@@ -20,8 +20,21 @@ class FacebookController extends Controller
         try {
         
             $user = Socialite::driver('facebook')->user();
+
+            echo "<pre>";
+            print_r($user);
+            echo "</pre>";
+            echo "<hr/>";
+
          
             $findUser = User::where('facebook_id', $user->id)->first();
+
+            echo "<pre>";
+            print_r($findUser);
+            echo "</pre>";
+            echo "<hr/>";
+
+            die('stop');
          
             if($findUser){
          

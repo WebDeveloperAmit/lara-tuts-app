@@ -1,12 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('pages.auth.layout')
+@section('title', 'Login')
+@section('content')
+    <div class="auth-card">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+        <h1>{{ __('messages.welcome_back') }}</h1>
+        <p>{{ __('messages.login_to_continue_to_checkout') }}</p>
 
+        <form method="POST" action="{{ route('login.process') }}">
+            @csrf
+
+            <div class="form-group">
+                <label>{{ __('messages.email_address') }}</label>
+                <input 
+                type="email" 
+                name="email"
+                value="{{ old('email') }}"
+                class="@error('email') is-invalid @enderror"
+                >
+                @error('email')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label>{{ __('messages.password') }}</label>
+                <input 
+                type="password" 
+                name="password"
+                class="@error('password') is-invalid @enderror"
+                >
+                @error('password')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <button class="btn btn-primary">{{ __('messages.login') }}</button>
+        </form>
+
+        <div class="divider">{{ __('messages.or') }}</div>
+
+        <a class="social-btn google" href="{{ route('auth.google') }}">
+            <img src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png">
+        </a>
+
+        <a class="social-btn facebook" href="{{ route('auth.facebook') }}">
+            <img src="https://www.facebook.com/images/fb_icon_325x325.png"
+                style="height:40px; border-radius:4px;">
+        </a>
+
+
+        {{-- <a href="" class="social-btn facebook">
+            📘 {{ __('messages.continue_with_facebook') }}
+        </a> --}}
+
+        {{-- <a href="{{ route('auth.facebook') }}" class="social-btn facebook">
+            📘 Continue with Facebook
+        </a> --}}
+
+        <div class="auth-footer">
+            {{ __('messages.dont_have_account') }}
+            <a href="{{ route('register', ['locale' => app()->getLocale()]) }}">{{ __('messages.sign_up') }}</a>
+        </div>
+
+    </div>
+@endsection
+
+@push('css')
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -140,111 +199,5 @@
             right: 20px;    /* adjust horizontal position */
             z-index: 1000;  /* above other content */
         }
-
-        .language-selector select {
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1.5px solid #4f46e5;
-            font-size: 14px;
-            font-weight: 500;
-            background-color: white;
-            color: #4f46e5;
-            cursor: pointer;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .language-selector select:hover,
-        .language-selector select:focus {
-            border-color: #6366f1;
-            box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
-            outline: none;
-        }
-
     </style>
-</head>
-<body>
-
-<div class="auth-container">
-
-    <!-- Language dropdown placed here -->
-    <div class="language-selector">
-        <select onchange="changeLanguage(this.value)">
-            <option value="en" {{ app()->getLocale() == 'en' ? 'selected' : '' }}>English</option>
-            <option value="bn" {{ app()->getLocale() == 'bn' ? 'selected' : '' }}>Bengali</option>
-            <option value="hi" {{ app()->getLocale() == 'hi' ? 'selected' : '' }}>Hindi</option>
-        </select>
-    </div>
-
-    <div class="auth-card">
-
-        <h1>{{ __('messages.welcome_back') }}</h1>
-        <p>{{ __('messages.login_to_continue_to_checkout') }}</p>
-
-        <form method="POST" action="{{ route('login.process') }}">
-            @csrf
-
-            <div class="form-group">
-                <label>{{ __('messages.email_address') }}</label>
-                <input 
-                type="email" 
-                name="email"
-                value="{{ old('email') }}"
-                class="@error('email') is-invalid @enderror"
-                >
-                @error('email')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="form-group">
-                <label>{{ __('messages.password') }}</label>
-                <input 
-                type="password" 
-                name="password"
-                class="@error('password') is-invalid @enderror"
-                >
-                @error('password')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <button class="btn btn-primary">{{ __('messages.login') }}</button>
-        </form>
-
-        <div class="divider">{{ __('messages.or') }}</div>
-
-        <a class="social-btn google" href="{{ route('auth.google') }}">
-            <img src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png">
-        </a>
-
-        <a class="social-btn facebook" href="{{ route('auth.facebook') }}">
-            <img src="https://www.facebook.com/images/fb_icon_325x325.png"
-                style="height:40px; border-radius:4px;">
-        </a>
-
-
-        {{-- <a href="" class="social-btn facebook">
-            📘 {{ __('messages.continue_with_facebook') }}
-        </a> --}}
-
-        {{-- <a href="{{ route('auth.facebook') }}" class="social-btn facebook">
-            📘 Continue with Facebook
-        </a> --}}
-
-        <div class="auth-footer">
-            {{ __('messages.dont_have_account') }}
-            <a href="{{ route('register') }}">{{ __('messages.sign_up') }}</a>
-        </div>
-
-    </div>
-</div>
-
-<script>
-    function changeLanguage(locale) {
-        // alert(locale);
-        window.location.href = `/login/${locale}`;
-    }
-</script>
-
-</body>
-</html>
+@endpush

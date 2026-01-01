@@ -59,4 +59,8 @@ return [
     'password_incorrect' => 'The provided password is incorrect.',
     'registration_successful' => 'Registration successful. You are now logged in.',
     'logged_in_successfully' => 'Logged in successfully.',
+    'logged_out_successfully' => 'Logged out successfully.',
+    'en' => 'English',
+    'bn' => 'Bengali',
+    'hi' => 'Hindi',
 ];

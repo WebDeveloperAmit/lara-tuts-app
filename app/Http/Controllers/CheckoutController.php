@@ -50,8 +50,8 @@ class CheckoutController extends Controller
 
         Auth::login($user);
         flash()->success(__('messages.logged_in_successfully'));
-        $request->session()->regenerate();
-        return redirect()->intended(route('checkout.index'));
+        $request->session()->regenerate(); // Regenerate session to prevent fixation attacks
+        return redirect()->intended(route('checkout.index', ['locale' => app()->getLocale()]));
     }
 
     public function registerProcess(Request $request)
@@ -69,17 +69,18 @@ class CheckoutController extends Controller
         ]);
         Auth::login($user);
         flash()->success(__('messages.registration_successful'));
-        $request->session()->regenerate();
-        return redirect()->intended(route('checkout.index'));
+        $request->session()->regenerate(); // Regenerate session to prevent fixation attacks
+        return redirect()->intended(route('checkout.index', ['locale' => app()->getLocale()]));
     }
 
     public function logout(Request $request) 
     {
         if (Auth::check()) {
             Auth::logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-            return redirect()->route('login');
+            $request->session()->invalidate(); // Invalidate the session data
+            $request->session()->regenerateToken(); // Regenerate CSRF token
+            flash()->success(__('messages.logged_out_successfully'));
+            return redirect()->route('login', ['locale' => app()->getLocale()]);
         }
     }
     

@@ -123,4 +123,16 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Supported Languages
+    |--------------------------------------------------------------------------
+    |
+    | This array defines the list of supported languages for the application.
+    | You can add or remove languages as needed.
+    |
+    */
+    
+    'supported_languages' => ['en', 'bn', 'hi'],
+
 ];

@@ -59,4 +59,8 @@ return [
     'password_incorrect' => 'प्रदान किए गए पासवर्ड गलत है।',
     'registration_successful' => 'पंजीकरण सफल हुआ। अब आप लॉगिन हो चुके हैं।',
     'logged_in_successfully' => 'सफलतापूर्वक लॉगिन किया गया।',
+    'logged_out_successfully' => 'सफलतापूर्वक लॉगआउट किया गया।',
+    'en' => 'अंग्रेज़ी',
+    'bn' => 'बंगाली',
+    'hi' => 'हिन्दी',
 ];

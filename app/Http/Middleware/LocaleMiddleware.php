@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Session;
 
 class LocaleMiddleware
 {
@@ -15,13 +16,20 @@ class LocaleMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $locale = $request->segment(1);
+        // dd($locale);
         $supportedLocales = ['en', 'bn', 'hi'];
-        $locale = $request->route('locale');
+        $defaultLocale = 'en';
         
         if ($locale && in_array($locale, $supportedLocales)) {
-            session(['locale' => $locale]);
+            app()->setLocale($locale);  
+            Session::put('locale', $locale);
+            // session(['locale' => $locale]);
+        } else {
+            // dd($defaultLocale);
+            // Session::put('locale', $defaultLocale);
+            app()->setLocale($defaultLocale);
         }
-        app()->setLocale(session('locale', 'en'));
 
         return $next($request);
     }

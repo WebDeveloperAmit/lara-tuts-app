@@ -6,27 +6,26 @@ use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\FacebookController;
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return redirect(url(app()->getLocale() . '/login'));
 });
 
 Route::group([
-    'prefix' => 'checkout', 
-    'as' => 'checkout.', 
-    'where' => ['locale' => 'en|bn|hi'],
+    'prefix' => '{locale?}/checkout', 
+    'as' => 'checkout.',
     'middleware' => ['auth.check']
 ], function () {
-    Route::get('/{locale?}', [CheckoutController::class, 'index'])->name('index');
-    Route::post('process/{locale?}', [CheckoutController::class, 'process'])->name('process');
-    Route::get('success/{locale?}', [CheckoutController::class, 'success'])->name('success');
-    Route::get('failure/{locale?}', [CheckoutController::class, 'failure'])->name('failure');
+    Route::get('/', [CheckoutController::class, 'index'])->name('index');
+    Route::post('process', [CheckoutController::class, 'process'])->name('process');
+    Route::get('success', [CheckoutController::class, 'success'])->name('success');
+    Route::get('failure', [CheckoutController::class, 'failure'])->name('failure');
 });
 
 // Authentication Routes
-Route::get('/login/{locale?}', function () {
+Route::get('/{locale?}/login', function () {
     return view('pages.auth.login');
 })->name('login');
 
-Route::get('/register/{locale?}', function () {
+Route::get('/{locale?}/register', function () {
     return view('pages.auth.register');
 })->name('register');
 
@@ -49,5 +48,5 @@ Route::get('/logout', [CheckoutController::class, 'logout'])->name('logout');
 
 // Fallback Route for undefined routes
 Route::fallback(function () {
-    return redirect()->route('login');
+    return redirect(url(app()->getLocale() . '/login'));
 });

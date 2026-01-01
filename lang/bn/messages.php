@@ -57,4 +57,8 @@ return [
     'password_incorrect' => 'প্রদত্ত পাসওয়ার্ডটি ভুল।',
     'registration_successful' => 'নিবন্ধন সফল। আপনি এখন লগইন হয়েছেন।',
     'logged_in_successfully' => 'সফলভাবে লগইন হয়েছে।',
+    'logged_out_successfully' => 'সফলভাবে লগআউট হয়েছে।',
+    'en' => 'ইংরেজি',
+    'bn' => 'বাংলা',
+    'hi' => 'হিন্দি',
 ];

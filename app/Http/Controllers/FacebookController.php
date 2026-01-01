@@ -36,7 +36,7 @@ class FacebookController extends Controller
 
             if ($user) {
                 Auth::login($user);
-                return redirect()->intended('home');
+                return redirect()->intended('checkout');
             }
 
             // Create new user

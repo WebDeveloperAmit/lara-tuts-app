@@ -5,6 +5,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\FacebookController;
 use App\Http\Controllers\RazorpayController;
+use App\Http\Controllers\StripeWebhookController;
 
 Route::get('/', function () {
     return redirect(url(app()->getLocale() . '/login'));
@@ -21,10 +22,19 @@ Route::group([
     Route::get('/success/{uuid}', [CheckoutController::class, 'success'])->name('success');
     Route::get('/failed/{uuid}', [CheckoutController::class, 'failed'])->name('failure');
     Route::post('/retry/{order}', [CheckoutController::class, 'retry'])->name('retry');
+
+    // stripe payment page
+    Route::get('/stripe-payment/failed/{uuid}', [CheckoutController::class, 'stripePaymentFailed'])
+    ->name('stripe.payment.failed');
+    Route::get('/stripe-payment/processing', [CheckoutController::class, 'stripePaymentProcessing'])->name('stripe.payment.processing');
+
 });
 
 Route::post('/razorpay/verify', [RazorpayController::class, 'verify'])
     ->name('razorpay.verify');
+
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
+
 
 
 // Authentication Routes

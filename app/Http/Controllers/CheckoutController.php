@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Services\RazorpayService;
+use App\Services\StripeService;
 use Razorpay\Api\Api;
 
 class CheckoutController extends Controller
@@ -78,25 +79,16 @@ class CheckoutController extends Controller
             case 'razorpay':
                 // Handle Razorpay Payment
                 return app(RazorpayService::class)->createOrder($order, $payment);
+            case 'stripe':
+                // Handle Stripe Payment
+                return $this->stripePayment($order, $payment);
             case 'cod':
+                $order->update(['status' => 'paid']);
+                $payment->update(['status' => 'success']);
                 return redirect()->route('checkout.success', ['locale' => app()->getLocale(), 'uuid' => $order->uuid]);
             default:
                 abort(400, __('messages.unsupported_payment_method'));
         }
-    }
-
-    public function success($uuid)
-    {
-        $uuid = request()->route('uuid'); // Get 'uuid' parameter from the route
-        $order = Order::with('payment')->where('uuid', $uuid)->firstOrFail();
-        return view('pages.payment-success', compact('order'));
-    }
-
-    public function failed($uuid)
-    {
-        $uuid = request()->route('uuid'); // Get 'uuid' parameter from the route
-        $order = Order::with('payment')->where('uuid', $uuid)->firstOrFail();
-        return view('pages.payment-failure', compact('order'));
     }
 
     public function retry(Order $order) // Type hinting added. PHP immediately ensures that $order is an Order object. $order is an instance of the Order model representing the order being retried.
@@ -122,6 +114,51 @@ class CheckoutController extends Controller
 
         // Redirect to checkout page with new payment
         return view('pages.retry-checkout-payment', compact('order', 'payment'));
+    }
+
+    public function stripePayment(Order $order, Payment $payment)
+    {
+        // Here you would typically create a Stripe Checkout Session or Payment Intent
+        // and return the necessary information to the frontend to complete the payment.
+        // For simplicity, we'll just return a view with order and payment details.
+        $stripe = app(StripeService::class);
+        $intent = $stripe->createPaymentIntent($order);
+
+        // Update payment with Stripe info
+        $payment->update([
+            'gateway_order_id' => $intent->id,
+            'status' => 'pending',
+            'meta' => $intent->toArray(),
+        ]);
+
+        return view('pages.payments.stripe-checkout', compact('order', 'payment', 'intent'));
+    }
+
+    public function success($uuid)
+    {
+        $uuid = request()->route('uuid'); // Get 'uuid' parameter from the route
+        $order = Order::with('payment')->where('uuid', $uuid)->firstOrFail();
+        return view('pages.payment-success', compact('order'));
+    }
+
+    public function failed($uuid)
+    {
+        $uuid = request()->route('uuid'); // Get 'uuid' parameter from the route
+        $order = Order::with('payment')->where('uuid', $uuid)->firstOrFail();
+        return view('pages.payment-failure', compact('order'));
+    }
+
+    // Stripe Payment Failed Handler
+    public function stripePaymentFailed($uuid)
+    {
+        $uuid = request()->route('uuid'); // Get 'uuid' parameter from the route
+        $order = Order::where('uuid', $uuid)->firstOrFail();
+        return view('pages.payments.payment-failed', compact('order'));
+    }
+
+    public function stripePaymentProcessing()
+    {
+        return view('pages.payments.stripe-payment-processing');
     }
 
 

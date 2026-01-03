@@ -34,6 +34,13 @@ class CheckoutController extends Controller
         try {
             // Begin Transaction
             DB::beginTransaction();
+
+            $lastOrderNumber = DB::table('orders')
+                ->lockForUpdate()
+                ->max(DB::raw("CAST(SUBSTRING(order_number, 5) AS UNSIGNED)"));
+
+            $nextNumber = $lastOrderNumber ? $lastOrderNumber + 1 : 10001;
+            $orderNumber = 'ORD-' . $nextNumber;
             
             // Create Order
             $order = Order::create([
@@ -43,7 +50,7 @@ class CheckoutController extends Controller
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'address' => $request->address,
-                'order_number' => Str::uuid(),
+                'order_number' => $orderNumber,
                 'total_amount' => $request->total_amount,
                 'status' => 'payment_pending',
             ]);
@@ -76,18 +83,17 @@ class CheckoutController extends Controller
         }
     }
 
-    public function success($order_id)
+    public function success($uuid)
     {
-        $orderId = \Request::segment(4);
-        $order = Order::with('payment')->findOrFail($orderId);
-
+        $uuid = request()->route('uuid'); // Get 'uuid' parameter from the route
+        $order = Order::with('payment')->where('uuid', $uuid)->firstOrFail();
         return view('pages.payment-success', compact('order'));
     }
 
-    public function failed($order_id)
+    public function failed($uuid)
     {
-        $orderId = \Request::segment(4);
-        $order = Order::with('payment')->findOrFail($orderId);
+        $uuid = request()->route('uuid'); // Get 'uuid' parameter from the route
+        $order = Order::with('payment')->where('uuid', $uuid)->firstOrFail();
         return view('pages.payment-failure', compact('order'));
     }
 

@@ -35,7 +35,7 @@
 
         <!-- Actions -->
         <div class="actions">
-            <a href="{{ route('checkout.index') }}" class="btn btn-outline">
+            <a href="{{ route('checkout.index', ['locale' => app()->getLocale()]) }}" class="btn btn-outline">
                 {{ __('messages.continue_shopping') }}
             </a>
         </div>

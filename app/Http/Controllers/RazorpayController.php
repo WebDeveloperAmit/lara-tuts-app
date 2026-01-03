@@ -44,7 +44,7 @@ class RazorpayController extends Controller
             return response()->json([
                 'redirect_url' => route('checkout.success', [
                     'locale' => app()->getLocale(),
-                    'order' => $payment->order_id
+                    'uuid' => $payment->order->uuid
                 ])
             ]);
 
@@ -62,7 +62,7 @@ class RazorpayController extends Controller
             return response()->json([
                 'redirect_url' => route('checkout.failure', [
                     'locale' => app()->getLocale(),
-                    'order' => $payment->order_id
+                    'uuid' => $payment->order->uuid
                 ])
             ]);
         }

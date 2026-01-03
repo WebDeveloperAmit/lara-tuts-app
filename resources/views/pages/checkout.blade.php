@@ -137,7 +137,7 @@
                         <strong>{{ __('messages.product_name') }}</strong>
                         <small>{{ __('messages.quantity') }}: 1</small>
                     </div>
-                    <span>$2.00</span>
+                    <span>$1.00</span>
                 </div>
 
                 <div class="summary-item">
@@ -151,7 +151,7 @@
                         type="text"
                         name="total_amount"
                         id="totalAmount"
-                        value="3.00"
+                        value="2.00"
                         readonly
                         style="
                             font-size:18px;
@@ -446,8 +446,16 @@
             const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
 
             if (!paymentMethod) {
-                alert('Please select a payment method');
+                // alert('Please select a payment method');
                 e.preventDefault();
+                Toastify({
+                    text: "Please filled all fields and select a payment method",
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "#dc3545",
+                    close: true
+                }).showToast();
                 return;
             }
 

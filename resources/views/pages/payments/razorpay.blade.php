@@ -1,6 +1,7 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
+    
     document.addEventListener('DOMContentLoaded', function () {
 
         var options = {
@@ -32,14 +33,14 @@
                     window.location.href = data.redirect_url;
                 })
                 .catch(() => {
-                    window.location.href = "{{ route('checkout.failure', ['locale' => app()->getLocale(), 'order' => $order->id]) }}";
+                    window.location.href = "{{ route('checkout.failure', ['locale' => app()->getLocale(), 'uuid' => $order->uuid]) }}";
                 });
             },
 
             modal: {
                 ondismiss: function () {
                     // User closed Razorpay popup
-                    window.location.href = "{{ route('checkout.failure', ['locale' => app()->getLocale(), 'order' => $order->id]) }}";
+                    window.location.href = "{{ route('checkout.failure', ['locale' => app()->getLocale(), 'uuid' => $order->uuid]) }}";
                 }
             },
 
@@ -51,4 +52,5 @@
         var rzp = new Razorpay(options);
         rzp.open(); // AUTO OPEN – PROFESSIONAL FLOW
     });
+
 </script>

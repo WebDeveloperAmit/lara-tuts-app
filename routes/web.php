@@ -12,13 +12,14 @@ Route::get('/', function () {
 
 Route::group([
     'prefix' => '{locale?}/checkout', 
+    'where' => ['locale' => 'en|bn|hi'],
     'as' => 'checkout.',
     'middleware' => ['auth.check']
 ], function () {
     Route::get('/', [CheckoutController::class, 'index'])->name('index');
     Route::post('/process', [CheckoutController::class, 'process'])->name('process');
-    Route::get('/success/{order}', [CheckoutController::class, 'success'])->name('success');
-    Route::get('/failed/{order}', [CheckoutController::class, 'failed'])->name('failure');
+    Route::get('/success/{uuid}', [CheckoutController::class, 'success'])->name('success');
+    Route::get('/failed/{uuid}', [CheckoutController::class, 'failed'])->name('failure');
     Route::post('/retry/{order}', [CheckoutController::class, 'retry'])->name('retry');
 });
 

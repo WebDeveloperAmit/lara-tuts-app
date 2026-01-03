@@ -42,7 +42,10 @@ class RazorpayController extends Controller
             ]);
 
             return response()->json([
-                'redirect_url' => route('checkout.success', $payment->order_id)
+                'redirect_url' => route('checkout.success', [
+                    'locale' => app()->getLocale(),
+                    'order' => $payment->order_id
+                ])
             ]);
 
         } catch (\Exception $e) {
@@ -57,7 +60,10 @@ class RazorpayController extends Controller
             ]);
 
             return response()->json([
-                'redirect_url' => route('checkout.failed', $payment->order_id)
+                'redirect_url' => route('checkout.failure', [
+                    'locale' => app()->getLocale(),
+                    'order' => $payment->order_id
+                ])
             ]);
         }
     }

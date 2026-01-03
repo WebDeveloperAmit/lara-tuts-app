@@ -2,6 +2,8 @@
 
 namespace App\Services;
 use Razorpay\Api\Api;
+use App\Models\Order;
+use App\Models\Payment;
 
 class RazorpayService
 {
@@ -13,7 +15,7 @@ class RazorpayService
         //
     }
 
-    public function createOrder($order, $payment)
+    public function createOrder(Order $order, Payment $payment)
     {
         // Logic to create Razorpay order
         $api = new Api(

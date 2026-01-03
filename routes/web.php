@@ -19,6 +19,7 @@ Route::group([
     Route::post('/process', [CheckoutController::class, 'process'])->name('process');
     Route::get('/success/{order}', [CheckoutController::class, 'success'])->name('success');
     Route::get('/failed/{order}', [CheckoutController::class, 'failed'])->name('failure');
+    Route::post('/retry/{order}', [CheckoutController::class, 'retry'])->name('retry');
 });
 
 Route::post('/razorpay/verify', [RazorpayController::class, 'verify'])

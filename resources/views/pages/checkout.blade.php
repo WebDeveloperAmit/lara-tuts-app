@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <form action="{{ route('checkout.process', ['locale' => app()->getLocale()]) }}" method="POST">
+    <form action="{{ route('checkout.process', ['locale' => app()->getLocale()]) }}" method="POST" id="checkoutForm">
         @csrf
 
         <div class="checkout-wrapper">
@@ -137,12 +137,12 @@
                         <strong>{{ __('messages.product_name') }}</strong>
                         <small>{{ __('messages.quantity') }}: 1</small>
                     </div>
-                    <span>$50.00</span>
+                    <span>$2.00</span>
                 </div>
 
                 <div class="summary-item">
                     <span>{{ __('messages.shipping') }}</span>
-                    <span>$5.00</span>
+                    <span>$1.00</span>
                 </div>
 
                 <div class="form-group">
@@ -151,7 +151,7 @@
                         type="text"
                         name="total_amount"
                         id="totalAmount"
-                        value="55.00"
+                        value="3.00"
                         readonly
                         style="
                             font-size:18px;
@@ -162,9 +162,15 @@
                     >
                 </div>
 
-                <button type="submit" class="checkout-btn">
+                <button type="submit" class="checkout-btn" id="placeOrderBtn">
                     {{ __('messages.place_order') }}
                 </button>
+
+                <!-- PAYMENT LOADER -->
+                <div id="paymentLoader" class="payment-loader">
+                    <div class="spinner"></div>
+                    <p id="loaderText">{{ __('messages.processing_payment') }}</p>
+                </div>
 
             </div>
 
@@ -372,6 +378,52 @@
             outline: none;
         }
 
+        .payment-loader {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,.95);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            width: 55px;
+            height: 55px;
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid #0d6efd;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 14px;
+            background: #0d6efd;
+            color: #fff;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .checkout-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .error {
+            color: red;
+            font-size: 13px;
+        }
+
+
     </style>
 @endpush
 
@@ -387,4 +439,35 @@
             });
         });
     </script>
+
+    <script>
+        document.getElementById('checkoutForm').addEventListener('submit', function (e) {
+
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+
+            if (!paymentMethod) {
+                alert('Please select a payment method');
+                e.preventDefault();
+                return;
+            }
+
+            const loader = document.getElementById('paymentLoader');
+            const loaderText = document.getElementById('loaderText');
+            const button = document.getElementById('placeOrderBtn');
+
+            button.disabled = true;
+            button.innerText = 'Please wait...';
+
+            if (paymentMethod.value === 'razorpay') {
+                loaderText.innerText = 'Opening secure Razorpay gateway...';
+            } else if (paymentMethod.value === 'stripe') {
+                loaderText.innerText = 'Redirecting to Stripe checkout...';
+            } else {
+                loaderText.innerText = 'Placing your order...';
+            }
+
+            loader.style.display = 'flex';
+        });
+    </script>
+
 @endpush

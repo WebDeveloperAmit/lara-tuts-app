@@ -14,22 +14,22 @@
         <div class="order-details">
             <div class="detail-row">
                 <strong>{{ __('messages.order_id') }}</strong>
-                <span>ORD-123456</span>
+                <span>{{ $order->order_number }}</span>
             </div>
 
             <div class="detail-row">
                 <strong>{{ __('messages.payment_method') }}</strong>
-                <span>{{ ucfirst($order->payment_method ?? 'Stripe') }}</span>
+                <span>{{ ucfirst($order->payment->gateway ?? '') }}</span>
             </div>
 
             <div class="detail-row">
                 <strong>{{ __('messages.email') }}</strong>
-                <span>customer@example.com</span>
+                <span>{{ $order->email }}</span>
             </div>
 
             <div class="detail-row total">
                 <strong>{{ __('messages.total_paid') }}</strong>
-                <span>$55.20</span>
+                <span>{{ $order->total_amount ?? 0.00 }}</span>
             </div>
         </div>
 

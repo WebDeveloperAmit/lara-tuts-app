@@ -14,12 +14,12 @@
         <div class="error-details">
             <div class="detail-row">
                 <strong>{{ __('messages.order_id') }}</strong>
-                <span>ORD-123456</span>
+                <span>{{ $order->order_number }}</span>
             </div>
 
             <div class="detail-row">
                 <strong>{{ __('messages.payment_method') }}</strong>
-                <span>Stripe</span>
+                <span>{{ ucfirst($order->payment->gateway ?? '') }}</span>
             </div>
 
             <div class="detail-row">
@@ -34,9 +34,20 @@
 
         <!-- Actions -->
         <div class="actions">
-            <a href="{{ route('checkout.index') }}" class="btn btn-primary">
+
+            <form action="{{ route('checkout.retry', [
+                    'locale' => app()->getLocale(),
+                    'order' => $order->id
+                ]) }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-primary">
+                    {{ __('messages.retry_payment') }}
+                </button>
+            </form>
+
+            {{-- <a href="{{ route('checkout.') }}" class="btn btn-primary">
                 {{ __('messages.retry_payment') }}
-            </a>
+            </a> --}}
         </div>
 
         <p class="support-note">

@@ -65,4 +65,5 @@ return [
     'hi' => 'Hindi',
     'unsupported_payment_method' => 'Unsupported payment method',
     'checkout_process_error' => 'An error occurred during the checkout process. Please try again.',
+    'processing_payment' => 'Processing your payment, please wait...',
 ];

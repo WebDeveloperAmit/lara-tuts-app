@@ -32,14 +32,14 @@
                     window.location.href = data.redirect_url;
                 })
                 .catch(() => {
-                    window.location.href = "{{ route('checkout.failed') }}";
+                    window.location.href = "{{ route('checkout.failure', ['locale' => app()->getLocale(), 'order' => $order->id]) }}";
                 });
             },
 
             modal: {
                 ondismiss: function () {
                     // User closed Razorpay popup
-                    window.location.href = "{{ route('checkout.failed') }}";
+                    window.location.href = "{{ route('checkout.failure', ['locale' => app()->getLocale(), 'order' => $order->id]) }}";
                 }
             },
 

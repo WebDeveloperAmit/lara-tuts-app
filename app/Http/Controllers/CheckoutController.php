@@ -59,13 +59,13 @@ class CheckoutController extends Controller
             return $this->handlePayment($order, $payment);
         } catch (\Exception $ex) {
             DB::rollBack(); // Rollback Transaction
-            Log::error('Checkout Process Error: ' . $ex->getMessage());
+            Log::error('Checkout Process Error', ['error' => $ex->getMessage()]);
             flash()->error(__('messages.checkout_process_error'));
             return redirect()->route('checkout.index', ['locale' => app()->getLocale()]);
         }
     }
 
-    private function handlePayment($order, $payment)
+    private function handlePayment(Order $order, Payment $payment) // Type hinting added. PHP immediately ensures that $order is an Order object and $payment is a Payment object.
     {
         switch ($payment->gateway) {
             case 'razorpay':
@@ -76,15 +76,46 @@ class CheckoutController extends Controller
         }
     }
 
-    public function success($order)
+    public function success($order_id)
     {
+        $orderId = \Request::segment(4);
+        $order = Order::with('payment')->findOrFail($orderId);
+
         return view('pages.payment-success', compact('order'));
     }
 
-    public function failed($order)
+    public function failed($order_id)
     {
+        $orderId = \Request::segment(4);
+        $order = Order::with('payment')->findOrFail($orderId);
         return view('pages.payment-failure', compact('order'));
     }
+
+    public function retry(Order $order)
+    {
+        // Create NEW Razorpay order
+        $api = new Api(
+            config('services.razorpay.key'),
+            config('services.razorpay.secret')
+        );
+
+        $razorpayOrder = $api->order->create([
+            'amount' => $order->total_amount * 100,
+            'currency' => 'INR',
+            'receipt' => 'retry_' . $order->id,
+        ]);
+
+        // Create new payment entry
+        $payment = Payment::create([
+            'order_id' => $order->id,
+            'gateway_order_id' => $razorpayOrder['id'],
+            'status' => 'pending',
+        ]);
+
+        // Redirect to checkout page with new payment
+        return view('pages.retry-checkout-payment', compact('order', 'payment'));
+    }
+
 
     public function loggedInProcess(Request $request)
     {

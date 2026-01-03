@@ -49,6 +49,14 @@
         .language-selector:hover .lang-dropdown {
             display: block;
         }
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            padding: 5px 10px;
+            margin-top: 5px;
+            display: block;
+        }
     </style>
 
 </head>

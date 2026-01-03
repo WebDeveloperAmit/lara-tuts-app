@@ -6,6 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Models\Order;
+use App\Models\Payment;
+use Illuminate\Support\Str;
+use App\Services\RazorpayService;
 
 class CheckoutController extends Controller
 {
@@ -16,17 +22,68 @@ class CheckoutController extends Controller
 
     public function process(Request $request)
     {
-        
+        $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'phone' => ['required', 'string', 'max:20'],
+            'address' => ['required', 'string', 'max:500'],
+            'payment_method' => ['required', 'in:stripe,paypal,razorpay,cod'],
+        ]);
+
+        try {
+            // Begin Transaction
+            DB::beginTransaction();
+            
+            // Create Order
+            $order = Order::create([
+                'user_id' => Auth::id(),
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'order_number' => Str::uuid(),
+                'total_amount' => $request->total_amount,
+                'status' => 'payment_pending',
+            ]);
+
+            $payment = Payment::create([
+                'order_id' => $order->id,
+                'gateway' => $request->payment_method,
+                'amount' => $order->total_amount,
+                'currency' => 'INR',
+            ]);
+
+            DB::commit(); // Commit Transaction
+            return $this->handlePayment($order, $payment);
+        } catch (\Exception $ex) {
+            DB::rollBack(); // Rollback Transaction
+            Log::error('Checkout Process Error: ' . $ex->getMessage());
+            flash()->error(__('messages.checkout_process_error'));
+            return redirect()->route('checkout.index', ['locale' => app()->getLocale()]);
+        }
     }
 
-    public function success()
+    private function handlePayment($order, $payment)
     {
-        return view('pages.payment-success');
+        switch ($payment->gateway) {
+            case 'razorpay':
+                // Handle Razorpay Payment
+                return app(RazorpayService::class)->createOrder($order, $payment);
+            default:
+            abort(400, __('messages.unsupported_payment_method'));
+        }
     }
 
-    public function failure()
+    public function success($order)
     {
-        return view('pages.payment-failure');
+        return view('pages.payment-success', compact('order'));
+    }
+
+    public function failed($order)
+    {
+        return view('pages.payment-failure', compact('order'));
     }
 
     public function loggedInProcess(Request $request)

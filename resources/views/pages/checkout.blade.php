@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <form action="{{ route('checkout.process') }}" method="POST">
+    <form action="{{ route('checkout.process', ['locale' => app()->getLocale()]) }}" method="POST">
         @csrf
 
         <div class="checkout-wrapper">
@@ -16,30 +16,72 @@
                 <div class="row">
                     <div class="form-group">
                         <label>{{ __('messages.first_name') }}</label>
-                        <input type="text" name="first_name" placeholder="John" required>
+                        <input 
+                        type="text" 
+                        name="first_name" 
+                        placeholder="John"
+                        value="{{ old('first_name') }}"
+                        >
+                        @error('first_name')
+                            <span class="alert alert-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label>{{ __('messages.last_name') }}</label>
-                        <input type="text" name="last_name" placeholder="Doe" required>
+                        <input 
+                        type="text" 
+                        name="last_name" 
+                        placeholder="Doe" 
+                        value="{{ old('last_name') }}"
+                        >
+                        @error('last_name')
+                            <span class="alert alert-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label>{{ __('messages.email_address') }}</label>
-                    <input type="email" name="email" placeholder="you@example.com" required>
+                    <input 
+                    type="email" 
+                    name="email" 
+                    placeholder="you@example.com" 
+                    value="{{ old('email') }}"
+                    >
+                    @error('email')
+                        <span class="alert alert-danger">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="form-group">
                     <label>{{ __('messages.phone_number') }}</label>
-                    <input type="text" name="phone" placeholder="+1 234 567 890" required>
+                    <input 
+                    type="text" 
+                    name="phone" 
+                    placeholder="+1 234 567 890" 
+                    value="{{ old('phone') }}"
+                    >
+                    @error('phone')
+                        <span class="alert alert-danger">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="form-group">
                     <label>{{ __('messages.address') }}</label>
-                    <textarea name="address" rows="3" placeholder="Street, City, Country" required></textarea>
+                    <textarea 
+                    name="address" 
+                    rows="3" 
+                    placeholder="Street, City, Country" 
+                    >{{ old('address') }}</textarea>
+                    @error('address')
+                        <span class="alert alert-danger">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <h2>{{ __('messages.payment_method') }}</h2>
+                @error('payment_method')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
                 <label class="payment-method">
                     <div class="payment-left">
                         <span class="payment-icon">💳</span>
@@ -48,7 +90,7 @@
                             <small>{{ __('messages.credit_debit_card') }}</small>
                         </div>
                     </div>
-                    <input type="radio" name="payment_method" value="stripe" required>
+                    <input type="radio" name="payment_method" value="stripe">
                 </label>
 
                 <label class="payment-method">
@@ -102,15 +144,6 @@
                     <span>{{ __('messages.shipping') }}</span>
                     <span>$5.00</span>
                 </div>
-
-                {{-- <div class="summary-item summary-total">
-                    <span>Total</span>
-                    <span>$55.00</span>
-                </div>
-
-                <button type="submit" class="checkout-btn">
-                    Pay $55.00 Securely
-                </button> --}}
 
                 <div class="form-group">
                     <label>{{ __('messages.total_amount') }}</label>

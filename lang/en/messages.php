@@ -63,4 +63,6 @@ return [
     'en' => 'English',
     'bn' => 'Bengali',
     'hi' => 'Hindi',
+    'unsupported_payment_method' => 'Unsupported payment method',
+    'checkout_process_error' => 'An error occurred during the checkout process. Please try again.',
 ];

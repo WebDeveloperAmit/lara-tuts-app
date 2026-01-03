@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\FacebookController;
+use App\Http\Controllers\RazorpayController;
 
 Route::get('/', function () {
     return redirect(url(app()->getLocale() . '/login'));
@@ -15,10 +16,14 @@ Route::group([
     'middleware' => ['auth.check']
 ], function () {
     Route::get('/', [CheckoutController::class, 'index'])->name('index');
-    Route::post('process', [CheckoutController::class, 'process'])->name('process');
-    Route::get('success', [CheckoutController::class, 'success'])->name('success');
-    Route::get('failure', [CheckoutController::class, 'failure'])->name('failure');
+    Route::post('/process', [CheckoutController::class, 'process'])->name('process');
+    Route::get('/success/{order}', [CheckoutController::class, 'success'])->name('success');
+    Route::get('/failed/{order}', [CheckoutController::class, 'failed'])->name('failure');
 });
+
+Route::post('/razorpay/verify', [RazorpayController::class, 'verify'])
+    ->name('razorpay.verify');
+
 
 // Authentication Routes
 Route::get('/{locale?}/login', function () {

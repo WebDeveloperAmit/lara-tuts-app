@@ -15,9 +15,10 @@ class RazorpayService
         //
     }
 
-    public function createOrder(Order $order, Payment $payment)
+    public function createOrder(Order $order, Payment $payment) // Type hinting added. PHP immediately ensures that $order is an Order object and $payment is a Payment object. $order is an instance of the Order model representing the order being processed. $payment is an instance of the Payment model representing the payment details for that order.
     {
         // Logic to create Razorpay order
+        // Creating a new instance of the Razorpay API client using the configured key and secret.
         $api = new Api(
             config('services.razorpay.key'), 
             config('services.razorpay.secret')

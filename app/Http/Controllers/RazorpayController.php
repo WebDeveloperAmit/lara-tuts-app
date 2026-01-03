@@ -11,10 +11,7 @@ class RazorpayController extends Controller
 
     public function verify(Request $request)
     {
-        $payment = Payment::where(
-            'gateway_order_id',
-            $request->razorpay_order_id
-        )->firstOrFail();
+        $payment = Payment::where('gateway_order_id', $request->razorpay_order_id)->firstOrFail();
 
         $api = new Api(
             config('services.razorpay.key'),

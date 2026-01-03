@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Order;
 use App\Models\Payment;
-use Illuminate\Support\Str;
 use App\Services\RazorpayService;
+use Razorpay\Api\Api;
 
 class CheckoutController extends Controller
 {
@@ -72,14 +72,16 @@ class CheckoutController extends Controller
         }
     }
 
-    private function handlePayment(Order $order, Payment $payment) // Type hinting added. PHP immediately ensures that $order is an Order object and $payment is a Payment object.
+    private function handlePayment(Order $order, Payment $payment) // Type hinting added. PHP immediately ensures that $order is an Order object and $payment is a Payment object. $order is an instance of the Order model representing the order being processed. $payment is an instance of the Payment model representing the payment details for that order.
     {
         switch ($payment->gateway) {
             case 'razorpay':
                 // Handle Razorpay Payment
                 return app(RazorpayService::class)->createOrder($order, $payment);
+            case 'cod':
+                return redirect()->route('checkout.success', ['locale' => app()->getLocale(), 'uuid' => $order->uuid]);
             default:
-            abort(400, __('messages.unsupported_payment_method'));
+                abort(400, __('messages.unsupported_payment_method'));
         }
     }
 
@@ -97,7 +99,7 @@ class CheckoutController extends Controller
         return view('pages.payment-failure', compact('order'));
     }
 
-    public function retry(Order $order)
+    public function retry(Order $order) // Type hinting added. PHP immediately ensures that $order is an Order object. $order is an instance of the Order model representing the order being retried.
     {
         // Create NEW Razorpay order
         $api = new Api(

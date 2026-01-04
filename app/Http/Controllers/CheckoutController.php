@@ -81,7 +81,7 @@ class CheckoutController extends Controller
                 return app(RazorpayService::class)->createOrder($order, $payment);
             case 'stripe':
                 // Handle Stripe Payment
-                return $this->stripePayment($order, $payment);
+                return $this->createStripeCheckout($order, $payment);
             case 'cod':
                 $order->update(['status' => 'paid']);
                 $payment->update(['status' => 'success']);
@@ -116,22 +116,23 @@ class CheckoutController extends Controller
         return view('pages.retry-checkout-payment', compact('order', 'payment'));
     }
 
-    public function stripePayment(Order $order, Payment $payment)
+    public function createStripeCheckout(Order $order, Payment $payment)
     {
         // Here you would typically create a Stripe Checkout Session or Payment Intent
         // and return the necessary information to the frontend to complete the payment.
         // For simplicity, we'll just return a view with order and payment details.
         $stripe = app(StripeService::class);
-        $intent = $stripe->createPaymentIntent($order);
+        $session = $stripe->createPaymentIntent($order);
 
         // Update payment with Stripe info
         $payment->update([
-            'gateway_order_id' => $intent->id,
+            'gateway_order_id' => $session->id,
             'status' => 'pending',
-            'meta' => $intent->toArray(),
+            'meta' => $session->toArray(),
         ]);
 
-        return view('pages.payments.stripe-checkout', compact('order', 'payment', 'intent'));
+        return redirect($session->url);
+        // return view('pages.payments.stripe-checkout', compact('order', 'payment', 'session'));
     }
 
     public function success($uuid)

@@ -41,7 +41,7 @@ class StripeWebhookController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
-    public function handle(Request $request)
+    public function handle_old_working(Request $request)
     {
         $event = Webhook::constructEvent(
             $request->getContent(),
@@ -74,5 +74,35 @@ class StripeWebhookController extends Controller
 
         return response()->json(['ok' => true]);
     }
+
+    public function handle(Request $request)
+    {
+        $event = Webhook::constructEvent(
+            $request->getContent(),
+            $request->header('Stripe-Signature'),
+            config('services.stripe.webhook_secret')
+        );
+
+        if ($event->type === 'checkout.session.completed') {
+
+            $session = $event->data->object;
+
+            $payment = Payment::where('gateway_order_id', $session->id)->first();
+
+            if ($payment) {
+                $payment->update([
+                    'status' => 'success',
+                    'gateway_payment_id' => $session->payment_intent,
+                ]);
+
+                $payment->order->update([
+                    'status' => 'paid'
+                ]);
+            }
+        }
+
+        return response()->json(['ok' => true]);
+    }
+
 
 }

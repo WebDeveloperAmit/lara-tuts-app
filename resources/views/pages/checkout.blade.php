@@ -137,7 +137,7 @@
                         <strong>{{ __('messages.product_name') }}</strong>
                         <small>{{ __('messages.quantity') }}: 1</small>
                     </div>
-                    <span>$1.00</span>
+                    <span>$9.00</span>
                 </div>
 
                 <div class="summary-item">
@@ -151,7 +151,7 @@
                         type="text"
                         name="total_amount"
                         id="totalAmount"
-                        value="2.00"
+                        value="10.00"
                         readonly
                         style="
                             font-size:18px;

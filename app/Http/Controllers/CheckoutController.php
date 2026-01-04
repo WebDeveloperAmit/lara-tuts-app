@@ -156,9 +156,21 @@ class CheckoutController extends Controller
         return view('pages.payments.payment-failed', compact('order'));
     }
 
-    public function stripePaymentProcessing()
+    public function stripePaymentProcessing($uuid)
     {
-        return view('pages.payments.stripe-payment-processing');
+        $uuid = request()->route('uuid'); // Get 'uuid' parameter from the route
+        $order = Order::where('uuid', $uuid)->firstOrFail();
+
+        if ($order->status === 'paid') {
+            return redirect()->route('checkout.success', ['locale' => app()->getLocale(), 'uuid' => $uuid]);
+        }
+
+        if ($order->status === 'failed') {
+            return redirect()->route('checkout.failure', ['locale' => app()->getLocale(), 'uuid' => $uuid]);
+        }
+
+        // return view('pages.payments.processing', compact('order'));
+        return view('pages.payments.stripe-payment-processing', compact('order'));
     }
 
 

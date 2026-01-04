@@ -8,7 +8,7 @@ use Stripe\Webhook;
 
 class StripeWebhookController extends Controller
 {
-    public function handle(Request $request)
+    public function handle_old(Request $request)
     {
         $payload = $request->getContent();
         $sig = $request->header('Stripe-Signature');
@@ -40,4 +40,39 @@ class StripeWebhookController extends Controller
 
         return response()->json(['status' => 'ok']);
     }
+
+    public function handle(Request $request)
+    {
+        $event = Webhook::constructEvent(
+            $request->getContent(),
+            $request->header('Stripe-Signature'),
+            config('services.stripe.webhook_secret')
+        );
+
+        if ($event->type === 'payment_intent.succeeded') {
+            $intent = $event->data->object;
+
+            $payment = Payment::where('gateway_order_id', $intent->id)->first();
+            if ($payment) {
+                $payment->update([
+                    'status' => 'success',
+                    'gateway_payment_id' => $intent->latest_charge,
+                ]);
+
+                $payment->order->update(['status' => 'paid']);
+            }
+        }
+
+        if ($event->type === 'payment_intent.payment_failed') {
+            $intent = $event->data->object;
+            $payment = Payment::where('gateway_order_id', $intent->id)->first();
+            if ($payment) {
+                $payment->update(['status' => 'failed']);
+                $payment->order->update(['status' => 'failed']);
+            }
+        }
+
+        return response()->json(['ok' => true]);
+    }
+
 }

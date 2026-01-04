@@ -26,7 +26,7 @@ Route::group([
     // stripe payment page
     Route::get('/stripe-payment/failed/{uuid}', [CheckoutController::class, 'stripePaymentFailed'])
     ->name('stripe.payment.failed');
-    Route::get('/stripe-payment/processing', [CheckoutController::class, 'stripePaymentProcessing'])->name('stripe.payment.processing');
+    Route::get('/stripe-payment/processing/{uuid}', [CheckoutController::class, 'stripePaymentProcessing'])->name('stripe.processing');
 
 });
 

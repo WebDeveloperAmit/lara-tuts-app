@@ -35,7 +35,7 @@ class StripeService
             'payment_method_types' => ['card'],
             'line_items' => [[
                 'price_data' => [
-                    'currency' => 'inr',
+                    'currency' => 'usd',
                     'product_data' => [
                         'name' => 'Order #' . $order->order_number,
                     ],
@@ -47,7 +47,7 @@ class StripeService
             'metadata' => [
                 'order_id' => $order->id,
             ],
-            'success_url' => route('checkout.success', ['locale' => app()->getLocale(), 'uuid' => $order->uuid]),
+            'success_url' => route('checkout.stripe.processing', ['locale' => app()->getLocale(), 'uuid' => $order->uuid]),
             'cancel_url' => route('checkout.failure', ['locale' => app()->getLocale(), 'uuid' => $order->uuid]),
         ]);
     }

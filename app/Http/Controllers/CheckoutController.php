@@ -123,7 +123,7 @@ class CheckoutController extends Controller
         // For simplicity, we'll just return a view with order and payment details.
         $stripe = app(StripeService::class);
         $session = $stripe->createPaymentIntent($order);
-
+        // echo '<pre>'; print_r($session); echo '</pre>'; exit;
         // Update payment with Stripe info
         $payment->update([
             'gateway_order_id' => $session->id,
@@ -154,7 +154,7 @@ class CheckoutController extends Controller
     {
         $uuid = request()->route('uuid'); // Get 'uuid' parameter from the route
         $order = Order::where('uuid', $uuid)->firstOrFail();
-        return view('pages.payments.payment-failed', compact('order'));
+        return view('pages.payments.stripe-payment-failed', compact('order'));
     }
 
     public function stripePaymentProcessing($uuid)

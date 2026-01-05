@@ -24,16 +24,17 @@ Route::group([
     Route::post('/retry/{order}', [CheckoutController::class, 'retry'])->name('retry');
 
     // stripe payment page
-    Route::get('/stripe-payment/failed/{uuid}', [CheckoutController::class, 'stripePaymentFailed'])
-    ->name('stripe.payment.failed');
-    Route::get('/stripe-payment/processing/{uuid}', [CheckoutController::class, 'stripePaymentProcessing'])->name('stripe.processing');
+    // Route::get('/stripe/failed/{uuid}', [CheckoutController::class, 'stripePaymentFailed'])
+    // ->name('stripe.payment.failed');
+    Route::get('/stripe/processing/{uuid}', [CheckoutController::class, 'stripePaymentProcessing'])->name('stripe.processing');
 
 });
 
-Route::post('/razorpay/verify', [RazorpayController::class, 'verify'])
-    ->name('razorpay.verify');
+Route::post('/razorpay/verify', [RazorpayController::class, 'verify'])->name('razorpay.verify');
 
+// Stripe Webhook Route
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
+
 
 
 

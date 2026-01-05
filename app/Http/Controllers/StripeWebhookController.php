@@ -75,6 +75,35 @@ class StripeWebhookController extends Controller
         return response()->json(['ok' => true]);
     }
 
+    // public function handle(Request $request)
+    // {
+    //     $event = Webhook::constructEvent(
+    //         $request->getContent(),
+    //         $request->header('Stripe-Signature'),
+    //         config('services.stripe.webhook_secret')
+    //     );
+
+    //     if ($event->type === 'checkout.session.completed') {
+
+    //         $session = $event->data->object;
+
+    //         $payment = Payment::where('gateway_order_id', $session->id)->first();
+
+    //         if ($payment) {
+    //             $payment->update([
+    //                 'status' => 'success',
+    //                 'gateway_payment_id' => $session->payment_intent,
+    //             ]);
+
+    //             $payment->order->update([
+    //                 'status' => 'paid'
+    //             ]);
+    //         }
+    //     }
+
+    //     return response()->json(['ok' => true]);
+    // }
+
     public function handle(Request $request)
     {
         $event = Webhook::constructEvent(
@@ -83,23 +112,26 @@ class StripeWebhookController extends Controller
             config('services.stripe.webhook_secret')
         );
 
-        if ($event->type === 'checkout.session.completed') {
-
-            $session = $event->data->object;
-
-            $payment = Payment::where('gateway_order_id', $session->id)->first();
-
-            if ($payment) {
-                $payment->update([
-                    'status' => 'success',
-                    'gateway_payment_id' => $session->payment_intent,
-                ]);
-
-                $payment->order->update([
-                    'status' => 'paid'
-                ]);
-            }
+        if ($event->type !== 'checkout.session.completed') {
+            return response()->json(['ignored' => true]);
         }
+
+        $session = $event->data->object;
+
+        $payment = Payment::where('gateway_order_id', $session->id)->first();
+
+        if (!$payment || $payment->status === 'success') {
+            return response()->json(['ok' => true]);
+        }
+
+        $payment->update([
+            'status' => 'success',
+            'gateway_payment_id' => $session->payment_intent,
+        ]);
+
+        $payment->order->update([
+            'status' => 'paid',
+        ]);
 
         return response()->json(['ok' => true]);
     }

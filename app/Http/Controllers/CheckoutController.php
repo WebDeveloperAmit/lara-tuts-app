@@ -122,7 +122,7 @@ class CheckoutController extends Controller
         // and return the necessary information to the frontend to complete the payment.
         // For simplicity, we'll just return a view with order and payment details.
         $stripe = app(StripeService::class);
-        $session = $stripe->createPaymentIntent($order);
+        $session = $stripe->createCheckoutSession($order);
         // echo '<pre>'; print_r($session); echo '</pre>'; exit;
         // Update payment with Stripe info
         $payment->update([
@@ -131,7 +131,8 @@ class CheckoutController extends Controller
             'meta' => $session->toArray(),
         ]);
 
-        return redirect($session->url);
+        // return redirect($session->url);
+        return redirect()->away($session->url);
         // return view('pages.payments.stripe-checkout', compact('order', 'payment', 'session'));
     }
 

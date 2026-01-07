@@ -131,7 +131,20 @@ class CheckoutController extends Controller
             'meta' => $session->toArray(),
         ]);
 
-        return redirect($session->url);
+        //Stripe Session Object (What $session Contains)
+        // {
+        //     "id": "cs_test_a1b2c3",
+        //     "object": "checkout.session",
+        //     "payment_intent": "pi_test_xxx",
+        //     "amount_total": 1000,
+        //     "currency": "usd",
+        //     "customer_email": "user@email.com",
+        //     "payment_status": "unpaid",
+        //     "url": "https://checkout.stripe.com/c/pay/cs_test..."
+        // }
+
+
+        return redirect($session->url); // Redirect to Stripe Checkout URL. Stripe hosted payment page
         // return view('pages.payments.stripe-checkout', compact('order', 'payment', 'session'));
     }
 

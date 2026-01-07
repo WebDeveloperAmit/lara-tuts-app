@@ -77,6 +77,8 @@ class StripeWebhookController extends Controller
 
     public function handle(Request $request)
     {
+        // Handle Stripe Webhook for Checkout Session Completed
+        // Webhook Validation (Security). Make sure the request is from Stripe.
         $event = Webhook::constructEvent(
             $request->getContent(),
             $request->header('Stripe-Signature'),
@@ -103,6 +105,17 @@ class StripeWebhookController extends Controller
 
         return response()->json(['ok' => true]);
     }
+
+    // 🏁 FINAL SUMMARY
+
+    // ✔ User submits checkout
+    // ✔ Order & payment created
+    // ✔ Stripe Checkout Session created
+    // ✔ User pays on Stripe
+    // ✔ Stripe fires webhook
+    // ✔ Webhook confirms payment
+    // ✔ Order marked PAID
+    // ✔ Redirect is only UI, webhook is truth
 
 
 }
